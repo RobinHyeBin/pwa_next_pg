@@ -1,11 +1,19 @@
-import { saveSubscription } from "../../utils/db";
+import { saveSubscription } from "@/repository/subscription";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+interface SubscribeApiRequest extends NextApiRequest {
+  body: PushSubscription;
+}
+
+export default async function handler(
+  req: SubscribeApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
     const subscription = req.body;
 
     try {
-      await saveSubscription(subscription);
+      saveSubscription(subscription);
       res.status(201).json({ message: "Subscription saved" });
     } catch (error) {
       console.error(error);

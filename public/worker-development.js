@@ -1,5 +1,6 @@
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
+// 알림 푸쉬 했을 때
 self.addEventListener("push", event => {
   console.log("[Service Worker] Push Received.", event.data.text());
   const {
@@ -10,6 +11,8 @@ self.addEventListener("push", event => {
     body
   }));
 });
+
+//
 self.addEventListener("notificationclick", event => {
   console.log("[Service Worker] notificationclick");
   clients.openWindow(event.notification.data.link);

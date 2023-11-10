@@ -1,49 +1,16 @@
+import useSubscriptionQuery from "@/hook/useSubscriptionQuery";
 import React from "react";
 
-async function sendNotification() {
-  try {
-    const response = await fetch("/api/send-notification", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    console.log(data);
-  } catch (error) {
-    console.error("Error sending notification:", error);
-  }
-}
-
-async function subscribeUser() {
-  navigator.serviceWorker.ready.then((registration) => {
-    registration.pushManager.getSubscription().then((subscription) => {
-      if (subscription) {
-        console.log("Already subscribed");
-      } else {
-        registration.pushManager
-          .subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-          })
-          .then((subscription) => {
-            // save subscription on DB
-            fetch("/api/subscribe", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(subscription),
-            });
-          });
-      }
-    });
-  });
-}
-
 export default function Home() {
+  const { subscribeUser, unsubscribeUser, sendNotification } =
+    useSubscriptionQuery();
+
   const handleSubscribeClick = () => {
     subscribeUser();
+  };
+
+  const handleUnsubscribeClick = () => {
+    unsubscribeUser();
   };
 
   const handleSendNotificationClick = () => {
@@ -53,10 +20,11 @@ export default function Home() {
   return (
     <div>
       <h1>Welcome to your PWA</h1>
-      <button onClick={handleSubscribeClick}>
-        Subscribe for push notifications
-      </button>
-      <button onClick={handleSendNotificationClick}>Send notification</button>
+      <div style={{ display: "flex", gap: "12px" }}>
+        <button onClick={handleSubscribeClick}>알림 허용</button>
+        <button onClick={handleUnsubscribeClick}>알림 차단</button>
+        <button onClick={handleSendNotificationClick}>알림 푸쉬</button>
+      </div>
     </div>
   );
 }

@@ -1,27 +1,33 @@
+import { getSubscriptions } from "@/repository/subscription";
+import { NextApiRequest, NextApiResponse } from "next";
 import webPush from "web-push";
-import { getSubscriptions } from "../../utils/db";
 
 const publicVapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 const privateVapidKey = process.env.VAPID_PRIVATE_KEY;
 
 webPush.setVapidDetails(
   "mailto:rachaenlee@gmail.com",
-  publicVapidKey,
-  privateVapidKey
+  publicVapidKey as string,
+  privateVapidKey as string
 );
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
-    const subscriptions = getSubscriptions();
+    // const subscriptions = await getDocs(collection(db, "subscriptions"));
+    const subscriptions = await getSubscriptions();
+    console.log(subscriptions);
     const notificationPayload = {
       title: "Hello from PWA",
       body: "This is a test push notification",
-      icon: "/icon-192x192.png",
-      badge: "/icon-192x192.png",
+      icon: "/images/icons/icon-192x192.png",
+      badge: "/images/icons/icon-192x192.png",
     };
 
     try {
-      console.log(notificationPayload);
+      console.log(subscriptions);
       for (const subscription of subscriptions) {
         await webPush.sendNotification(
           subscription,
