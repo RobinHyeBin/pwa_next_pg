@@ -1,7 +1,7 @@
 import { errorMessage } from "@/constant/error";
 import NotificationContext from "@/context/Notification";
 import useSubscriptionQuery from "@/hook/useSubscriptionQuery";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 export default function Home() {
   const { isSubscribed, isDenied, isRendering, toggleSubscribe } =
@@ -17,6 +17,10 @@ export default function Home() {
   const handleSendNotificationClick = () => {
     sendNotification();
   };
+
+  useEffect(() => {
+    alert(Notification.permission);
+  }, []);
 
   return (
     <div>
