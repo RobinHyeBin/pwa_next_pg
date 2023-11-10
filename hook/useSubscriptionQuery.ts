@@ -47,7 +47,7 @@ const useSubscriptionQuery = () => {
 
       alert("알림 허용 성공!");
     } catch (error: any) {
-      throw new Error(error);
+      console.log(error);
     }
   };
 
