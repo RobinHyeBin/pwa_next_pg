@@ -32,6 +32,11 @@ const useSubscriptionQuery = () => {
   };
 
   const subscribeUser = async () => {
+    if (Notification.permission === "denied") {
+      alert("알림이 꺼진 상태입니다");
+      return;
+    }
+
     try {
       const registration = await navigator.serviceWorker.ready;
       const prevSubscription = await registration.pushManager.getSubscription();
