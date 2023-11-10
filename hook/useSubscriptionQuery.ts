@@ -9,6 +9,12 @@ import {
 } from "firebase/firestore";
 
 const useSubscriptionQuery = () => {
+  const getSubscriptionByEndpoint = (endpoint = "") => {
+    const collectionRef = collection(db, "subscriptions");
+
+    return getDocs(query(collectionRef, where("endpoint", "==", endpoint)));
+  };
+
   const sendNotification = async () => {
     try {
       const response = await axios.post("/api/send-notification", {
@@ -40,8 +46,8 @@ const useSubscriptionQuery = () => {
       await axios.post("/api/subscribe", subscription);
 
       alert("알림 허용 성공!");
-    } catch (error) {
-      console.log("Subscription Error", error);
+    } catch (error: any) {
+      throw new Error(error);
     }
   };
 
@@ -49,17 +55,12 @@ const useSubscriptionQuery = () => {
     try {
       const registration = await navigator.serviceWorker.ready;
       const prevSubscription = await registration.pushManager.getSubscription();
+
       console.log(prevSubscription);
 
       if (prevSubscription) {
         prevSubscription.unsubscribe();
-        const collectionRef = collection(db, "subscriptions");
-        const q = query(
-          collectionRef,
-          where("endpoint", "==", prevSubscription.endpoint)
-        );
-        const snapshot = getDocs(q);
-
+        const snapshot = getSubscriptionByEndpoint(prevSubscription.endpoint);
         (await snapshot).forEach((doc) => deleteDoc(doc.ref));
 
         alert("알림을 차단했습니다!");
@@ -73,6 +74,7 @@ const useSubscriptionQuery = () => {
     subscribeUser,
     unsubscribeUser,
     sendNotification,
+    getSubscriptionByEndpoint,
   };
 };
 

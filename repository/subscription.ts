@@ -2,10 +2,7 @@ import { db } from "@/firebase";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { PushSubscription } from "web-push";
 
-// const subscriptions = new Set<PushSubscription>();
-
 export function saveSubscription(subscription: PushSubscription) {
-  // subscriptions.add(subscription);
   addDoc(collection(db, "subscriptions"), subscription);
 }
 
