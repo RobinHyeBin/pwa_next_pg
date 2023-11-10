@@ -1,5 +1,6 @@
 import { saveSubscription } from "@/repository/subscription";
 import { NextApiRequest, NextApiResponse } from "next";
+import { PushSubscription } from "web-push";
 
 interface SubscribeApiRequest extends NextApiRequest {
   body: PushSubscription;
