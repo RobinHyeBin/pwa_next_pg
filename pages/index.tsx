@@ -3,7 +3,8 @@ import useSubscriptionQuery from "@/hook/useSubscriptionQuery";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function Home() {
-  const [permission, setPermission] = useState("default");
+  const [permission, setPermission] =
+    useState<NotificationPermission>("default");
   const { isSubscribed, isDenied, isRendering, toggleSubscribe } =
     useContext(NotificationContext);
   const { subscribeUser, unsubscribeUser, sendNotification } =
@@ -14,12 +15,16 @@ export default function Home() {
     toggleSubscribe();
   };
 
-  const handleSendNotificationClick = () => {
+  const handlePushNotificationClick = () => {
     sendNotification();
   };
 
-  useEffect(() => {
+  const initPermission = () => {
     setPermission(Notification.permission);
+  };
+
+  useEffect(() => {
+    initPermission();
   }, []);
 
   return (
@@ -31,7 +36,7 @@ export default function Home() {
           <button onClick={handleToggleSubscribe}>
             {isSubscribed ? "알림 차단" : "알림 허용"}
           </button>
-          <button onClick={handleSendNotificationClick}>알림 푸쉬</button>
+          <button onClick={handlePushNotificationClick}>알림 푸쉬</button>
         </div>
       )}
       <p>{permission}</p>
