@@ -1,9 +1,9 @@
-import { errorMessage } from "@/constant/error";
 import NotificationContext from "@/context/Notification";
 import useSubscriptionQuery from "@/hook/useSubscriptionQuery";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 export default function Home() {
+  const [permission, setPermission] = useState("default");
   const { isSubscribed, isDenied, isRendering, toggleSubscribe } =
     useContext(NotificationContext);
   const { subscribeUser, unsubscribeUser, sendNotification } =
@@ -19,7 +19,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    alert(Notification.permission);
+    setPermission(Notification.permission);
   }, []);
 
   return (
@@ -34,6 +34,7 @@ export default function Home() {
           <button onClick={handleSendNotificationClick}>알림 푸쉬</button>
         </div>
       )}
+      <p>{permission}</p>
     </div>
   );
 }

@@ -44,7 +44,10 @@ export const NotificationContextProvider = ({
       subscription?.endpoint
     );
 
-    setIsSubscribed(!!subscriptionCount);
+    if (subscriptionCount > 0 || subscription) {
+      setIsSubscribed(true);
+    }
+
     setIsRendering(false);
   };
 
